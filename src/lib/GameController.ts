@@ -2,7 +2,7 @@ import words from "./WordParser"
 import log from './logger'
 import type WordEntry from "src/types/WordEntry"
 import type { Readable, Subscriber } from "svelte/store"
-import { readable } from 'svelte/store'
+import { readable, get } from 'svelte/store'
 
 function chooseWord(ignore?: string[]) {
     let choices = ignore ? words.filter(({ word }) => !ignore.includes(word)) : words
@@ -12,16 +12,14 @@ function chooseWord(ignore?: string[]) {
 }
 
 const controller = (new class {
-    #_currentWord: WordEntry
-    #_updateCurrentWordStore: Subscriber<typeof this.currentWord>
-    currentWordStore: Readable<typeof this.currentWord>
+    currentWord: Readable<WordEntry>
+    #updateCurrentWord: Subscriber<WordEntry>
 
     #usedWords: string[]
 
     constructor() {
-        this.#_currentWord = null
-        this.currentWordStore = readable<typeof this.currentWord>(this.#_currentWord, (update) => {
-            this.#_updateCurrentWordStore = update
+        this.currentWord = readable<WordEntry>(null, (update) => {
+            this.#updateCurrentWord = update
         })
         this.#usedWords = localStorage.getItem('secedu-worldle.usedWords')?.split(";") ?? []
     }
@@ -29,20 +27,12 @@ const controller = (new class {
     newGame() {
         let entry = chooseWord(this.#usedWords)
         log.info("Selected word", entry.word)
-        this.currentWord = entry
-    }
-
-    get currentWord() {
-        return this.#_currentWord
-    }
-    set currentWord(entry: WordEntry) {
-        this.#_currentWord = entry
-        this.#_updateCurrentWordStore?.(entry)
+        this.#updateCurrentWord(entry)
     }
 })
 
 export default controller
 
 globalThis.GiveMeTheAnswer = function () {
-    return controller.currentWord?.word
+    return get(controller.currentWord)?.word
 }

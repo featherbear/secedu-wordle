@@ -5,8 +5,9 @@
   import GameController from "./lib/GameController";
   console.log(words);
 
-  let { currentWordStore: currentWord } = GameController;
+  let { currentWord } = GameController;
 
+  
   GameController.newGame();
 </script>
 
