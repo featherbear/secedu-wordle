@@ -1,6 +1,6 @@
 type WordEntry = {
     word: string
-    ignoreLengthMismatch?: boolean
+    forceLength?: number
     onComplete?: Function
     onWin?: Function
     onLose?: Function
