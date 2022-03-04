@@ -51,10 +51,13 @@ export const words: (string | WordEntry)[] = [
     // 'PHONE',
     // { word: 'RECON' },
     // 'RESET',
-    // {
-    //     word: 'RICKROLL',
-    //     forceLength: 5
-    // },
+    {
+        word: 'RICK ROLL',
+        forceLength: 5,
+        onLose: () => {
+            
+        }
+    },
     // 'RISKS',
     // { word: 'ROT13' },
     // 'RULES',
