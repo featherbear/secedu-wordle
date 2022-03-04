@@ -2,14 +2,25 @@
   import logo from "./assets/svelte.png";
   import Counter from "./lib/Counter.svelte";
   import words from "./lib/WordParser";
-  import GameController from './lib/GameController'
+  import GameController from "./lib/GameController";
   console.log(words);
+
+  let { currentWordStore: currentWord } = GameController;
+
+  GameController.newGame();
 </script>
+
+{JSON.stringify($currentWord)}
 
 <main>
   <img src={logo} alt="Svelte Logo" />
   <h1>Hello Typescript!</h1>
 
+  <button
+    on:click={() => {
+      GameController.newGame();
+    }}
+  />
   <Counter />
 
   <p>
