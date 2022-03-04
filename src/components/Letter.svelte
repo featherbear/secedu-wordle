@@ -34,6 +34,7 @@
 
 <style lang="scss">
   div {
+    user-select: none;
     width: 20px;
     height: 20px;
 
