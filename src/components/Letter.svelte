@@ -9,7 +9,8 @@
 
   export let value: string = "";
   export let position: number;
-  export let reveal: boolean = false;
+  export let showColours: boolean = false;
+  export let showPrefill: boolean = false;
 
   let correctValue,
     classState = "";
@@ -17,7 +18,7 @@
     classState = "";
     correctValue = $currentWord.word[position];
 
-    if (reveal) {
+    if (showColours) {
       if (prefilled.includes(correctValue)) classState = "correct";
       else if (value) {
         if (value == correctValue) classState = "correct";
@@ -28,7 +29,7 @@
 </script>
 
 <div class={classState}>
-  {prefilled.includes(correctValue) ? correctValue : value}
+  {prefilled.includes(correctValue) && showPrefill ? correctValue : value}
 </div>
 
 <style lang="scss">

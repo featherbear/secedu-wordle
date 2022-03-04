@@ -9,17 +9,13 @@
 
   import Letter from "./Letter.svelte";
 
-  export let position: number;
+  export let value: string = ""
+  export let showColours: boolean = false;
+  export let showPrefill: boolean = false;
 </script>
 
 <div style="display: flex; flex-direction: row; gap: 5px;">
-  {#if position < $guesses.length}
-    {#each Array($currentWord.length) as _, i}
-      <Letter position={i} value={$guesses[position][i]} reveal={true} />
-    {/each}
-  {:else}
-    {#each Array($currentWord.length) as _, i}
-      <Letter position={i} />
-    {/each}
-  {/if}
+  {#each Array($currentWord.length) as _, i}
+    <Letter value={value[i] ?? ''} position={i} {showColours} {showPrefill} />
+  {/each}
 </div>

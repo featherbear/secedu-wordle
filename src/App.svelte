@@ -9,23 +9,81 @@
   import { onMount, setContext } from "svelte";
 
   import Row from "./components/Row.svelte";
+  import { writable } from "svelte/store";
 
   console.log(words);
 
-  let { currentWord } = GameController;
+  let { currentWord, guesses, gameInProgress } = GameController;
 
   onMount(() => {
     GameController.newGame();
   });
-  setContext("guesses", GameController.guesses);
+  setContext("guesses", guesses);
   setContext("currentWord", currentWord);
+
+  function addCharacter(c) {
+    if (!$gameInProgress) return;
+    $currentGuess = $currentGuess + c;
+  }
+  function handleKeydown(evt: KeyboardEvent) {
+    // TODO: Handle prefilled characters
+
+    if (/^[a-z]$/i.test(evt.key)) {
+      if ($currentGuess.length == $currentWord.length) return;
+
+      let nextPrefill = $currentWord.word[$currentGuess.length];
+      if (prefilled.includes(nextPrefill)) addCharacter(nextPrefill);
+
+      addCharacter(evt.key.toUpperCase());
+    } else if (/^[0-9]$/.test(evt.key)) {
+      if ($currentGuess.length == $currentWord.length) return;
+
+      addCharacter(evt.key);
+
+      // TODO: Check if numeric input is enabled
+      if (true) return;
+    } else if (evt.key === "Escape") {
+      $currentGuess = "";
+    } else if (evt.key === "Enter") {
+      if ($currentGuess.length != $currentWord.length) return;
+
+      let result = GameController.tryWord($currentGuess);
+      $currentGuess = "";
+      setTimeout(() => {
+        switch (result) {
+          case true:
+            $currentWord.onWin?.();
+            $currentWord.onComplete?.();
+            break;
+          case false:
+            $currentWord.onLose?.();
+            $currentWord.onComplete?.();
+            break;
+          // case null
+        }
+      }, 0);
+    } else if (evt.key === "Backspace") {
+      $currentGuess = $currentGuess.slice(0, -1);
+    }
+  }
+
+  let currentGuess = writable<string>("");
+  setContext("currentGuess", currentGuess);
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 {JSON.stringify($currentWord)}
 {#if $currentWord}
   <div style="display: flex; flex-direction: column;  gap: 5px;">
     {#each Array(attempts[$currentWord.length]) as _, i}
-      <Row position={i} />
+      {#if i < $guesses.length}
+        <Row value={$guesses[i]} showColours={true} showPrefill={true} />
+      {:else if i === $guesses.length && $gameInProgress}
+        <Row value={$currentGuess} showPrefill={true} />
+      {:else}
+        <Row />
+      {/if}
     {/each}
   </div>
 {/if}
