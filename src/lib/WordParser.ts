@@ -4,7 +4,8 @@ import type WordEntry from "../types/WordEntry"
 import * as WordData from "../data/WordData"
 
 const words: (Omit<WordEntry, 'forceLength'> & { length: number })[] = []
-let seen = new Set()
+let seen = new Set<string>()
+
 for (let entry of WordData.words) {
     let word = ((typeof entry === 'string') ? entry : entry.word).trim().toUpperCase()
 
@@ -13,7 +14,7 @@ for (let entry of WordData.words) {
         continue
     }
 
-    if (!Object.keys(WordData.guesses)
+    if (!Object.keys(WordData.attempts)
         .map((s) => Number.parseInt(s))
         .includes(word.length) && !entry?.['forceLength']) {
         log.warn(word, 'has an invalid length, or forceLength not set')

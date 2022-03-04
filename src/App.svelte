@@ -1,18 +1,34 @@
 <script lang="ts">
   import logo from "./assets/svelte.png";
   import Counter from "./lib/Counter.svelte";
+
   import words from "./lib/WordParser";
+  import { attempts, prefilled } from "./data/WordData";
+
   import GameController from "./lib/GameController";
+  import { onMount, setContext } from "svelte";
+
+  import Row from "./components/Row.svelte";
+
   console.log(words);
 
   let { currentWord } = GameController;
 
-  
-  GameController.newGame();
+  onMount(() => {
+    GameController.newGame();
+  });
+  setContext("guesses", GameController.guesses);
+  setContext("currentWord", currentWord);
 </script>
 
 {JSON.stringify($currentWord)}
-
+{#if $currentWord}
+  <div style="display: flex; flex-direction: column;  gap: 5px;">
+    {#each Array(attempts[$currentWord.length]) as _, i}
+      <Row position={i} />
+    {/each}
+  </div>
+{/if}
 <main>
   <img src={logo} alt="Svelte Logo" />
   <h1>Hello Typescript!</h1>
