@@ -11,6 +11,8 @@
   import Row from "./components/Row.svelte";
   import { writable } from "svelte/store";
 
+  import log from './lib/logger'
+
   console.log(words);
 
   let { currentWord, guesses, gameInProgress } = GameController;
@@ -62,7 +64,7 @@
   function handleGuessResult(result) {
     function revealWord(word?: string) {
       if (!word) word = $currentWord.word;
-      let a = new Row({
+      new Row({
         target: guessRows,
         props: {
           value: word,
@@ -88,6 +90,8 @@
         /**
          * Default complete routine
          */
+        log.info("Game over! Word was " + $currentWord.word)
+        
       }
     }
 
@@ -106,6 +110,7 @@
           /**
            * Default lose routine
            */
+          revealWord();
         }
 
         handleComplete();
