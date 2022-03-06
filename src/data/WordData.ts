@@ -1,4 +1,7 @@
 import type WordEntry from "../types/WordEntry";
+import { letterRevealDelay } from "./values";
+
+import rickroll from './WordEffects/rickroll.svelte'
 
 export const words: (string | WordEntry)[] = [
     // '0-DAY',
@@ -45,7 +48,6 @@ export const words: (string | WordEntry)[] = [
     // 'OAUTH',
     // 'OPSEC',
     // { word: 'OSINT' },
-    // { word: 'OVERFLOW' },
     // 'PATCH',
     // { word: 'PHISH' },
     // 'PHONE',
@@ -54,9 +56,17 @@ export const words: (string | WordEntry)[] = [
     {
         word: 'RICK ROLL',
         forceLength: 5,
-        onLose: () => {
-            
+        onComplete() {
+            setTimeout(() => {
+                new rickroll({
+                    target: document.body
+                })
+
+            }, letterRevealDelay * 3)
         }
+        // onLose: () => {
+
+        // },
     },
     // 'RISKS',
     // { word: 'ROT13' },
