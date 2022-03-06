@@ -24,12 +24,9 @@
     ],
   };
 
-  console.log(layouts);
-
   const dispatch = createEventDispatcher();
 
   function handleKeydown(e) {
-    console.log(e.detail);
     dispatch("keydown", { key: e.detail } as any);
   }
 
@@ -60,7 +57,6 @@
 </script>
 
 {#if $currentWord}
-  {$currentWord.word}
   <Keyboard
     layout="wordle"
     custom={/[0-9]/.test($currentWord.word)
