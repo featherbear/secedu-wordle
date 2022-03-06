@@ -58,11 +58,12 @@ export const words: (string | WordEntry)[] = [
         forceLength: 5,
         onComplete() {
             setTimeout(() => {
-                new rickroll({
-                    target: document.body
-                })
-
-            }, letterRevealDelay * 3)
+                this.attachComponentToCurrentState(
+                    new rickroll({
+                        target: document.body
+                    })
+                )
+            }, letterRevealDelay * 5)
         }
     },
     'RISKS',
