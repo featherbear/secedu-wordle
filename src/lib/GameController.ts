@@ -44,10 +44,10 @@ const controller = (new class {
         this.#updateGuesses?.([])
 
         let entry = word ?? chooseWord([...this.#usedWords, get(this.currentWord)?.word])
-        log.info("Selected word", entry.word)
         this.#updateCurrentWord?.(entry)
-
+        
         this.#updateGameInProgress(true)
+        log.info("New game started")
     }
 
     tryWord(guess: string): boolean | null {
