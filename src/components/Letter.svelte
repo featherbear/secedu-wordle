@@ -35,7 +35,11 @@
   style={revealDelay ? `--reveal-delay: ${revealDelay}ms` : ""}
   class:reveal={revealDelay !== null}
 >
-  {prefilled.includes(correctValue) && showPrefill ? correctValue : value}
+  <span>
+    {prefilled.includes(correctValue) && showPrefill
+      ? correctValue
+      : value}</span
+  >
 </div>
 
 <style lang="scss">
@@ -64,7 +68,8 @@
 
     &.reveal {
       // Uses magic.css import
-      animation: vanishIn 0.8s linear var(--reveal-delay), opacityDelay var(--reveal-delay);
+      animation: vanishIn 0.8s linear var(--reveal-delay),
+        opacityDelay var(--reveal-delay);
     }
 
     & {
