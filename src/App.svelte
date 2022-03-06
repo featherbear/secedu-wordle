@@ -102,7 +102,7 @@
       {:else if i === $guesses.length && $gameInProgress}
         <Row value={$currentGuess} showPrefill={true} />
       {:else}
-        <Row />
+        <Row isInactive={true} />
       {/if}
     {/each}
   </div>
