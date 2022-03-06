@@ -1,6 +1,5 @@
 <script lang="ts">
-  import logo from "./assets/svelte.png";
-  import Counter from "./lib/Counter.svelte";
+  import logo from "./assets/secedu.png";
 
   import words from "./lib/WordParser";
   import { attempts, prefilled } from "./data/WordData";
@@ -11,7 +10,8 @@
   import Row from "./components/Row.svelte";
   import { writable } from "svelte/store";
 
-  import log from './lib/logger'
+  import log from "./lib/logger";
+  import Button from "./lib/Button.svelte";
 
   console.log(words);
 
@@ -64,7 +64,7 @@
   function handleGuessResult(result) {
     function revealWord(word?: string) {
       if (!word) word = $currentWord.word;
-      new Row({
+      let elem = new Row({
         target: guessRows,
         props: {
           value: word,
@@ -79,6 +79,20 @@
         ),
         intro: true,
       });
+
+      if ($currentWord.length < word.length) {
+        console.log("show");
+        // Force layout for off-sized final word
+        // for the memes.
+        let elemDOM = elem.getDOM();
+        let elemDOMstyles = getComputedStyle(elemDOM);
+        guessRows.style.setProperty(
+          "--overflow-space",
+          parseInt(elemDOMstyles.height) + parseInt(elemDOMstyles.gap) + "px"
+        );
+        elemDOM.style.position = "absolute";
+        elemDOM.style.bottom = "calc(-1 * var(--overflow-space))";
+      }
     }
     const context = {
       word: $currentWord.word,
@@ -118,46 +132,42 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-{JSON.stringify($currentWord)}
-{#if $currentWord}
-  <div
-    style="display: flex; flex-direction: column; gap: 5px;"
-    bind:this={guessRows}
-  >
-    {#each Array(attempts[$currentWord.length]) as _, i}
-      {#if i < $guesses.length}
-        <Row value={$guesses[i]} showFeedback={true} showPrefill={true} />
-      {:else if i === $guesses.length && $gameInProgress}
-        <Row value={$currentGuess} showPrefill={true} />
-      {:else}
-        <Row isInactive={true} />
-      {/if}
-    {/each}
-  </div>
-{/if}
 <main>
-  <img src={logo} alt="Svelte Logo" />
-  <h1>Hello Typescript!</h1>
+  <header>
+    <img src={logo} alt="Svelte Logo" />
+    <h1>SECedu Wordle</h1>
+  </header>
+  <section>
+    {#if $currentWord}
+      <app bind:this={guessRows}>
+        {#each Array(attempts[$currentWord.length]) as _, i}
+          {#if i < $guesses.length}
+            <Row value={$guesses[i]} showFeedback={true} showPrefill={true} />
+          {:else if i === $guesses.length && $gameInProgress}
+            <Row value={$currentGuess} showPrefill={true} />
+          {:else}
+            <Row isInactive={true} />
+          {/if}
+        {/each}
+      </app>
+    {/if}
+  </section>
+  <footer>
+    <Button
+      on:click={() => {
+        GameController.newGame();
+      }}>New word</Button
+    >
 
-  <button
-    on:click={() => {
-      GameController.newGame();
-    }}
-  />
-  <Counter />
-
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
+    <p>
+      Test your <code>COMP6[84]4X</code> knowledge!
+    </p>
+  </footer>
 </main>
 
-<style>
+<style lang="scss">
+  @import "./theme.scss";
+
   :root {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -167,36 +177,52 @@
     text-align: center;
     padding: 1em;
     margin: 0 auto;
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  img {
-    height: 16rem;
-    width: 16rem;
-  }
+    header {
+      img {
+        height: 8rem;
+      }
 
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
+      h1 {
+        color: $colour-primary;
+        text-transform: uppercase;
+        font-size: 4rem;
+        font-weight: 100;
+        line-height: 1.1;
+        margin: 1rem auto;
+        max-width: 14rem;
 
-  p {
-    max-width: 14rem;
-    margin: 1rem auto;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
+        @media (min-width: 480px) {
+          max-width: none;
+        }
+      }
     }
 
-    p {
-      max-width: none;
+    app {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 5px;
+      position: relative;
+      margin-bottom: var(--overflow-space);
+    }
+    footer {
+      margin-top: 1em;
+      p {
+        max-width: 14rem;
+        margin: 1rem auto;
+        line-height: 1.35;
+
+        code {
+          font-size: 1.2em;
+        }
+
+        @media (min-width: 480px) {
+          max-width: none;
+        }
+      }
     }
   }
 </style>

@@ -47,16 +47,22 @@
 
   div {
     user-select: none;
-    width: 20px;
-    height: 20px;
+    width: 3em;
+    height: 3em;
+
+    span {
+      font-size: 2em;
+    }
 
     text-align: center;
 
     &.correct {
-      background-color: green;
+      background-color: #54c64a;
+      border-color: darken(#54c64a, 20%);
     }
     &.nearby {
-      background-color: yellow;
+      background-color: #ffdc1e;
+      border-color: darken(#ffdc1e, 20%);
     }
 
     &.wrong {
@@ -87,16 +93,17 @@
     }
   }
 
-
   @keyframes opacityDelay {
-    0%, 100% {
-      opacity: 0
+    0%,
+    100% {
+      opacity: 0;
     }
   }
 
   @keyframes shake {
     10%,
     90% {
+      border-color: rgb(182, 51, 51);
       transform: translate3d(-1px, 0, 0);
     }
 
