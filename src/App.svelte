@@ -49,35 +49,7 @@
 
       let result = GameController.tryWord($currentGuess);
       $currentGuess = "";
-      setTimeout(() => {
-        switch (result) {
-          case true:
-            $currentWord.onWin?.();
-            $currentWord.onComplete?.();
-            break;
-          case false:
-            if (!$currentWord.onLose?.()) {
-              let a = new Row({
-                target: guessRows,
-                props: {
-                  value: $currentWord.word,
-                  forceLength: $currentWord.word.length,
-                  animateReveal: true,
-                },
-                context: new Map(
-                  Object.entries({
-                    guesses: guesses,
-                    currentWord: currentWord,
-                  })
-                ),
-                intro: true,
-              });
-            }
-            $currentWord.onComplete?.();
-            break;
-          // case null
-        }
-      }, 0);
+      setTimeout(() => handleGuessResult(result), 0);
     } else if (evt.key === "Backspace") {
       $currentGuess = $currentGuess.slice(0, -1);
     }
@@ -86,6 +58,62 @@
   let currentGuess = writable<string>("");
   setContext("currentGuess", currentGuess);
   let guessRows: HTMLElement;
+
+  function handleGuessResult(result) {
+    function revealWord(word?: string) {
+      if (!word) word = $currentWord.word;
+      let a = new Row({
+        target: guessRows,
+        props: {
+          value: word,
+          forceLength: word.length,
+          animateReveal: true,
+        },
+        context: new Map(
+          Object.entries({
+            guesses: guesses,
+            currentWord: currentWord,
+          })
+        ),
+        intro: true,
+      });
+    }
+    const context = {
+      word: $currentWord.word,
+      revealWord,
+    };
+
+    function handleComplete() {
+      if (!$currentWord.onComplete || !$currentWord.onComplete.apply(context)) {
+        /**
+         * Default complete routine
+         */
+      }
+    }
+
+    switch (result) {
+      case true:
+        if (!$currentWord.onWin || !$currentWord.onWin.apply(context)) {
+          /**
+           * Default win routine
+           */
+        }
+
+        handleComplete();
+        break;
+      case false: {
+        if (!$currentWord.onLose || !$currentWord.onLose.apply(context)) {
+          /**
+           * Default lose routine
+           */
+        }
+
+        handleComplete();
+        break;
+      }
+      // case null
+    }
+  }
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
