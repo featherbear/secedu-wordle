@@ -42,7 +42,7 @@ const controller = (new class {
     newGame() {
         this.#updateGuesses?.([])
 
-        let entry = chooseWord(this.#usedWords)
+        let entry = chooseWord([...this.#usedWords, get(this.currentWord)?.word])
         log.info("Selected word", entry.word)
         this.#updateCurrentWord?.(entry)
 

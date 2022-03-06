@@ -13,6 +13,7 @@
   import Button from "./lib/Button.svelte";
   import Hexagon from "./components/Hexagon.svelte";
   import type { CallbackContext } from "./types/WordEntry";
+  import Keyboard from "./components/Keyboard.svelte";
 
   let { currentWord, guesses, gameInProgress } = GameController;
 
@@ -21,7 +22,7 @@
     componentsInCurrentState = [];
 
     guessRows?.style.setProperty("--overflow-space", "");
-    
+
     $currentGuess = "";
 
     GameController.newGame();
@@ -57,10 +58,8 @@
     } else if (/^[0-9]$/.test(evt.key)) {
       if ($currentGuess.length == $currentWord.length) return;
 
+      if (!/[0-9]/.test($currentWord.word)) return;
       addCharacter(evt.key);
-
-      // TODO: Check if numeric input is enabled
-      if (true) return;
     } else if (evt.key === "Escape") {
       $currentGuess = "";
     } else if (evt.key === "Enter") {
@@ -175,6 +174,8 @@
     <Button on:click={() => doNewGame()}>New word</Button>
 
     <p>Test your COMP6[84]4X knowledge!</p>
+
+    <Keyboard on:keydown={({ detail }) => handleKeydown(detail)} />
   </footer>
   <Hexagon />
 </main>

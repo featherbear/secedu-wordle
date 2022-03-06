@@ -2578,6 +2578,11 @@ svelte-hmr@^0.14.9:
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.14.10.tgz#eb383c7e8791e81ccc64958847908eb88a6aee08"
   integrity sha512-VffsN0fT4cTJ7b4apf9VDIrgsbLFaJzPypcAuy4NcHx2PKKayfwLwabaYPWdHK5lJ/uQ/HBrkEsWHzo64NU6mQ==
 
+svelte-keyboard@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/svelte-keyboard/-/svelte-keyboard-0.4.0.tgz#25d9cc11d64b7c5b4dbe077ce5f43acff5fb5d30"
+  integrity sha512-r3aNBgwX3d5BjZQi+ZPq5UufkC3DsCpupBNgj31oMzK9T8yMGX43hb04LyCwN03NDJ42TIULH26VlCW6jsgjiw==
+
 svelte-preprocess@^4.0.0, svelte-preprocess@^4.9.8:
   version "4.10.4"
   resolved "https://registry.yarnpkg.com/svelte-preprocess/-/svelte-preprocess-4.10.4.tgz#308a410266bfc55b4e608da8d552b63580141260"
