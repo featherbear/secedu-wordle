@@ -28,10 +28,6 @@
       }
     }
   }
-
-  let displayValue;
-  $: displayValue =
-    prefilled.includes(correctValue) && showPrefill ? correctValue : value;
 </script>
 
 <div
@@ -39,13 +35,15 @@
   style={revealDelay ? `--reveal-delay: ${revealDelay}ms` : ""}
   class:reveal={revealDelay !== null}
 >
-  {#if displayValue}
-    <span>{displayValue}</span>{/if}
+  <span>
+    {prefilled.includes(correctValue) && showPrefill
+      ? correctValue
+      : value}</span
+  >
 </div>
 
 <style lang="scss">
   @import "magic.css/assets/scss/bling/_vanishIn.scss";
-  @import "magic.css/assets/scss/math/_swashIn.scss";
 
   div {
     user-select: none;
@@ -54,7 +52,6 @@
 
     span {
       font-size: 2em;
-      animation: swashIn 0.2s;
     }
 
     text-align: center;
@@ -71,7 +68,7 @@
     &.wrong {
       background-color: #a7a7a7;
       border-color: darken(#a7a7a7, 20%);
-
+      
       animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
