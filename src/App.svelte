@@ -12,6 +12,7 @@
 
   import log from "./lib/logger";
   import Button from "./lib/Button.svelte";
+  import Hexagon from "./components/Hexagon.svelte";
 
   console.log(words);
 
@@ -159,10 +160,9 @@
       }}>New word</Button
     >
 
-    <p>
-      Test your <code>COMP6[84]4X</code> knowledge!
-    </p>
+    <p>Test your COMP6[84]4X knowledge!</p>
   </footer>
+  <Hexagon />
 </main>
 
 <style lang="scss">
@@ -214,12 +214,9 @@
         max-width: 14rem;
         margin: 1rem auto;
         line-height: 1.35;
+        font-size: 1.5em;
 
-        code {
-          font-size: 1.2em;
-        }
-
-        @media (min-width: 480px) {
+        @media (min-width: 360px) {
           max-width: none;
         }
       }
