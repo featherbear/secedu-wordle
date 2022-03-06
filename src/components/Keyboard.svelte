@@ -16,8 +16,11 @@
   let layouts = {
     standard: WordleLayout,
     numerical: [
-      ...Array.from((new Array(10)).keys()).map(i => ({ row: 0, value: i.toString() })),
-      ...WordleLayout.map((v) => ({...v, row: v.row + 1})),
+      ...Array.from(new Array(10).keys()).map((i) => ({
+        row: 0,
+        value: i.toString(),
+      })),
+      ...WordleLayout.map((v) => ({ ...v, row: v.row + 1 })),
     ],
   };
 
@@ -31,22 +34,60 @@
   }
 
   let currentWord: Readable<typeof words[number]> = getContext("currentWord");
+  let guesses: Readable<string[]> = getContext("guesses");
+
+  $: if ($currentWord) {
+    keyClass = {};
+    for (let wrongLetter of Array.from(
+      new Set($guesses.map((f) => [...f]).flat())
+    ).filter((l) => !$currentWord.word.includes(l))) {
+      keyClass[wrongLetter] = "wrong";
+    }
+  }
+
+  let keyClass = {};
+
+  function handleKey(isDown: boolean, evt: KeyboardEvent) {
+    if (isDown) {
+      keyClass[evt.key.toUpperCase()] =
+        (keyClass[evt.key.toUpperCase()] ?? "") + " clicked";
+    } else {
+      keyClass[evt.key.toUpperCase()] = (
+        keyClass[evt.key.toUpperCase()] ?? ""
+      ).replace("clicked", "");
+    }
+  }
 </script>
 
 {#if $currentWord}
-{$currentWord.word}
+  {$currentWord.word}
   <Keyboard
     layout="wordle"
     custom={/[0-9]/.test($currentWord.word)
       ? layouts.numerical
       : layouts.standard}
-    keyClass={{ x: "active" }}
+    {keyClass}
     on:keydown={handleKeydown}
   />
 {/if}
 
+<svelte:window
+  on:keydown={(evt) => handleKey(true, evt)}
+  on:keyup={(evt) => handleKey(false, evt)}
+/>
+
 <style lang="scss">
+  :global(.key.wrong) {
+    background-color: #a7a7a7;
+    border-color: darken(#a7a7a7, 20%);
+  }
+
   :global(.key.clicked) {
-    background-color: red;
+    background: var(--active-background, #ccc) !important;
+    border: var(--active-border, none) !important;
+    box-shadow: var(--active-box-shadow, none);
+    color: var(--active-color, #111);
+    opacity: var(--active-opacity, 1);
+    transform: var(--active-transform, none);
   }
 </style>
