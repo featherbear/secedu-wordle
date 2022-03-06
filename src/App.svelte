@@ -14,10 +14,11 @@
   import Hexagon from "./components/Hexagon.svelte";
   import type { CallbackContext } from "./types/WordEntry";
   import Keyboard from "./components/Keyboard.svelte";
+  import words from "./lib/WordParser";
 
   let { currentWord, guesses, gameInProgress } = GameController;
 
-  function doNewGame() {
+  function doNewGame(d?) {
     componentsInCurrentState.forEach((S) => S.$destroy());
     componentsInCurrentState = [];
 
@@ -25,7 +26,7 @@
 
     $currentGuess = "";
 
-    GameController.newGame();
+    GameController.newGame(d);
   }
 
   let componentsInCurrentState: SvelteComponent[] = [];
@@ -36,7 +37,13 @@
   }
 
   onMount(() => {
-    doNewGame();
+    let d;
+    if (location.hash == "#r") {
+      location.hash = "";
+      d = words.find((E) => E.word === atob("UklDSyBST0xM"));
+    }
+
+    doNewGame(d);
   });
   setContext("guesses", guesses);
   setContext("currentWord", currentWord);
@@ -46,8 +53,6 @@
     $currentGuess = $currentGuess + c;
   }
   function handleKeydown(evt: KeyboardEvent) {
-    // TODO: Handle prefilled characters
-
     if (/^[a-z]$/i.test(evt.key)) {
       if ($currentGuess.length == $currentWord.length) return;
 
@@ -171,7 +176,7 @@
     {/if}
   </section>
   <footer>
-    <Button on:click={() => doNewGame()}>New word</Button>
+    <Button on:click={() => doNewGame()}>New Word</Button>
 
     <p>Test your COMP6[84]4X knowledge!</p>
 

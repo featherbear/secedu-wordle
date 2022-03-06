@@ -3,6 +3,7 @@ import log from './logger'
 import type { Readable, Subscriber } from "svelte/store"
 import { readable, get } from 'svelte/store'
 import { attempts } from "../data/WordData"
+import type WordEntry from "src/types/WordEntry"
 
 function chooseWord(ignore?: string[]) {
     let choices = ignore ? words.filter(({ word }) => !ignore.includes(word)) : words
@@ -39,10 +40,10 @@ const controller = (new class {
         })
     }
 
-    newGame() {
+    newGame(word?: typeof words[number]) {
         this.#updateGuesses?.([])
 
-        let entry = chooseWord([...this.#usedWords, get(this.currentWord)?.word])
+        let entry = word ?? chooseWord([...this.#usedWords, get(this.currentWord)?.word])
         log.info("Selected word", entry.word)
         this.#updateCurrentWord?.(entry)
 
