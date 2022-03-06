@@ -56,7 +56,23 @@
             $currentWord.onComplete?.();
             break;
           case false:
-            $currentWord.onLose?.();
+            if (!$currentWord.onLose?.()) {
+              let a = new Row({
+                target: guessRows,
+                props: {
+                  value: $currentWord.word,
+                  forceLength: $currentWord.word.length,
+                  animateReveal: true,
+                },
+                context: new Map(
+                  Object.entries({
+                    guesses: guesses,
+                    currentWord: currentWord,
+                  })
+                ),
+                intro: true,
+              });
+            }
             $currentWord.onComplete?.();
             break;
           // case null
@@ -69,16 +85,20 @@
 
   let currentGuess = writable<string>("");
   setContext("currentGuess", currentGuess);
+  let guessRows: HTMLElement;
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
 
 {JSON.stringify($currentWord)}
 {#if $currentWord}
-  <div style="display: flex; flex-direction: column;  gap: 5px;">
+  <div
+    style="display: flex; flex-direction: column; gap: 5px;"
+    bind:this={guessRows}
+  >
     {#each Array(attempts[$currentWord.length]) as _, i}
       {#if i < $guesses.length}
-        <Row value={$guesses[i]} showColours={true} showPrefill={true} />
+        <Row value={$guesses[i]} showFeedback={true} showPrefill={true} />
       {:else if i === $guesses.length && $gameInProgress}
         <Row value={$currentGuess} showPrefill={true} />
       {:else}
