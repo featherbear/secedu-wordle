@@ -258,9 +258,9 @@
     footer {
       margin-top: 1em;
 
-      @media (max-width: 480px) {
-        flex: 1;
-      }
+      // @media (max-width: 480px) {
+      //   flex: 1;
+      // }
       p {
         max-width: 14rem;
         margin: 1rem auto;
