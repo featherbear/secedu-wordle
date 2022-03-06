@@ -10,15 +10,15 @@
   @import "../theme.scss";
 
   div.container {
-      z-index: -1;
+    z-index: -1;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    left: 0;
+    top: 0;
     overflow: hidden;
   }
 
   main {
-    transform: translate(65px, 80px);
+    transform: translate(-65px, -80px);
   }
 
   .hexagonContainer {
