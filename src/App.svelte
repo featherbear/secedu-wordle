@@ -207,7 +207,6 @@
         font-weight: 100;
         line-height: 1.1;
         margin: 1rem auto;
-        max-width: 14rem;
 
         @media (min-width: 480px) {
           max-width: none;
