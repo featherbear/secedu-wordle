@@ -22,9 +22,8 @@ type WordEntry = {
 
     /**
      * Callback for when the game is over
-     * @returns Should the default routine still be called
      */
-    onComplete?: (this: CallbackContext) => boolean
+    onComplete?: (this: CallbackContext) => void
     
     /**
      * Callback for when the game is won

@@ -86,13 +86,8 @@
     };
 
     function handleComplete() {
-      if (!$currentWord.onComplete || !$currentWord.onComplete.apply(context)) {
-        /**
-         * Default complete routine
-         */
-        log.info("Game over! Word was " + $currentWord.word)
-        
-      }
+      log.info("Game over! Word was " + $currentWord.word);
+      $currentWord.onComplete?.apply(context);
     }
 
     switch (result) {
