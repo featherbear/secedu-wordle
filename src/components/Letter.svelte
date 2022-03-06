@@ -50,11 +50,16 @@
     width: 3em;
     height: 3em;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     span {
       font-size: 2em;
     }
 
     text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
 
     &.correct {
       background-color: #54c64a;
@@ -68,7 +73,7 @@
     &.wrong {
       background-color: #a7a7a7;
       border-color: darken(#a7a7a7, 20%);
-      
+
       animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;

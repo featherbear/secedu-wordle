@@ -202,14 +202,23 @@
     align-items: center;
 
     header {
+      @media (max-width: 480px) {
+        font-size: 8px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+
       img {
-        height: 8rem;
+        height: 8em;
+        padding-right: 1em;
       }
 
       h1 {
         color: $colour-primary;
         text-transform: uppercase;
-        font-size: 4rem;
+        font-size: 4em;
         font-weight: 100;
         line-height: 1.1;
         margin: 1rem auto;
@@ -218,6 +227,7 @@
           max-width: none;
         }
       }
+      margin-bottom: 1em;
     }
 
     app {
@@ -233,7 +243,7 @@
         max-width: 14rem;
         margin: 1rem auto;
         line-height: 1.35;
-        font-size: 1.5em;
+        font-size: 1em;
 
         @media (min-width: 360px) {
           max-width: none;

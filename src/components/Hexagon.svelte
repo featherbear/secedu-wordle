@@ -18,7 +18,7 @@
   }
 
   main {
-    transform: translate(-65px, -80px);
+    transform: translate(-135px, -140px);
   }
 
   .hexagonContainer {
