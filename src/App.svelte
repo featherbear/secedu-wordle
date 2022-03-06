@@ -179,9 +179,10 @@
     <Button on:click={() => doNewGame()}>New Word</Button>
 
     <p>Test your COMP6[84]4X knowledge!</p>
-
-    <Keyboard on:keydown={({ detail }) => handleKeydown(detail)} />
   </footer>
+  <div style="margin-bottom: 2em">
+    <Keyboard on:keydown={({ detail }) => handleKeydown(detail)} />
+  </div>
   <Hexagon />
 </main>
 
@@ -193,17 +194,33 @@
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   }
 
+  :global(body) {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  :global(body > div#app) {
+    height: 100%;
+    margin: 0;
+  }
+
   main {
+    @media (max-width: 480px) {
+      font-size: 13px;
+    }
+
     text-align: center;
-    padding: 1em;
+    padding: 0 1em;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    height: 100%;
+
     header {
       @media (max-width: 480px) {
-        font-size: 8px;
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -218,10 +235,11 @@
       h1 {
         color: $colour-primary;
         text-transform: uppercase;
-        font-size: 4em;
+        font-size: 3em;
         font-weight: 100;
         line-height: 1.1;
         margin: 1rem auto;
+        max-width: 4em;
 
         @media (min-width: 480px) {
           max-width: none;
@@ -239,6 +257,10 @@
     }
     footer {
       margin-top: 1em;
+
+      @media (max-width: 480px) {
+        flex: 1;
+      }
       p {
         max-width: 14rem;
         margin: 1rem auto;
