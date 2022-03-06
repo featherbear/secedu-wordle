@@ -1,11 +1,10 @@
 <script lang="ts">
   import logo from "./assets/secedu.png";
 
-  import words from "./lib/WordParser";
   import { attempts, prefilled } from "./data/WordData";
 
   import GameController from "./lib/GameController";
-  import { onMount, setContext } from "svelte";
+  import { onMount, setContext, SvelteComponent } from "svelte";
 
   import Row from "./components/Row.svelte";
   import { writable } from "svelte/store";
@@ -13,13 +12,30 @@
   import log from "./lib/logger";
   import Button from "./lib/Button.svelte";
   import Hexagon from "./components/Hexagon.svelte";
-
-  console.log(words);
+  import type { CallbackContext } from "./types/WordEntry";
 
   let { currentWord, guesses, gameInProgress } = GameController;
 
-  onMount(() => {
+  function doNewGame() {
+    componentsInCurrentState.forEach((S) => S.$destroy());
+    componentsInCurrentState = [];
+
+    guessRows?.style.setProperty("--overflow-space", "");
+    
+    $currentGuess = "";
+
     GameController.newGame();
+  }
+
+  let componentsInCurrentState: SvelteComponent[] = [];
+
+  function attachComponentToCurrentState(component: SvelteComponent) {
+    componentsInCurrentState.push(component);
+    return component;
+  }
+
+  onMount(() => {
+    doNewGame();
   });
   setContext("guesses", guesses);
   setContext("currentWord", currentWord);
@@ -65,24 +81,25 @@
   function handleGuessResult(result) {
     function revealWord(word?: string) {
       if (!word) word = $currentWord.word;
-      let elem = new Row({
-        target: guessRows,
-        props: {
-          value: word,
-          forceLength: word.length,
-          animateReveal: true,
-        },
-        context: new Map(
-          Object.entries({
-            guesses: guesses,
-            currentWord: currentWord,
-          })
-        ),
-        intro: true,
-      });
+      let elem = attachComponentToCurrentState(
+        new Row({
+          target: guessRows,
+          props: {
+            value: word,
+            forceLength: word.length,
+            animateReveal: true,
+          },
+          context: new Map(
+            Object.entries({
+              guesses,
+              currentWord,
+            })
+          ),
+          intro: true,
+        })
+      );
 
       if ($currentWord.length < word.length) {
-        console.log("show");
         // Force layout for off-sized final word
         // for the memes.
         let elemDOM = elem.getDOM();
@@ -95,9 +112,10 @@
         elemDOM.style.bottom = "calc(-1 * var(--overflow-space))";
       }
     }
-    const context = {
+    const context: CallbackContext = {
       word: $currentWord.word,
       revealWord,
+      attachComponentToCurrentState,
     };
 
     function handleComplete() {
@@ -154,11 +172,7 @@
     {/if}
   </section>
   <footer>
-    <Button
-      on:click={() => {
-        GameController.newGame();
-      }}>New word</Button
-    >
+    <Button on:click={() => doNewGame()}>New word</Button>
 
     <p>Test your COMP6[84]4X knowledge!</p>
   </footer>

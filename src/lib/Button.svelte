@@ -1,7 +1,18 @@
-<button on:click><slot /> </button>
+<script lang="ts">
+  let elem: HTMLButtonElement;
+</script>
+
+<button
+  on:click={() => {
+    elem.blur();
+  }}
+  on:click
+  bind:this={elem}
+  ><slot />
+</button>
 
 <style lang="scss">
-  @import '../theme.scss';
+  @import "../theme.scss";
 
   button {
     font-family: inherit;
